@@ -1,0 +1,65 @@
+CREATE TABLE dim_customers(
+    [customer_id] varchar(50)Primary Key,
+    [customer_city] varchar(50),
+    [customer_state] varchar(50)
+);
+CREATE TABLE dim_product(
+    [product_id] varchar(50) Primary Key,
+    [product_category_name_PT] varchar(50),
+    [product_category_name_EN] varchar(50),
+    [product_weight_g] int,
+    [product_length_cm]int,
+    [product_height_cm] int,
+    [product_width_cm] int
+);
+
+CREATE TABLE fact_delivered_orders (
+    unique_id INT IDENTITY(1,1) PRIMARY KEY,
+    customer_id varchar(50),
+    delivery_day_id int,
+    product_id varchar(50),
+    seller_id varchar(50),
+    nr_of_orders INT,
+    nr_of_products INT,
+    product_sales_revenue float,
+    shipping_revenue float,
+    nr_of_review_score INT,
+    sum_review_score INT,
+    CONSTRAINT fk_customer FOREIGN KEY (customer_id) REFERENCES dim_customers(customer_id),
+    CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES dim_product(product_id),
+    CONSTRAINT fk_seller FOREIGN KEY (seller_id) REFERENCES dim_sellers(seller_id)
+);
+CREATE INDEX idx_delivery_dayid
+ON fact_delivered_orders (delivery_day_id);
+
+CREATE TABLE dim_calendar (
+    DateID INT PRIMARY KEY,         
+    FullDate DATE,                 
+    Year INT,                       
+    Month INT,                   
+    Day INT,                        
+    DayName NVARCHAR(10),           
+    MonthName NVARCHAR(10),         
+);
+
+declare @startdate Date='2015-01-01';
+declare @enddate Date='2024-12-31';
+
+declare @idate Date = @startdate;
+
+while @idate<=@enddate
+
+begin
+insert into dim_calendar
+values(
+cast(format(@idate,'yyyyMMdd') as int),
+@idate,
+YEAR(@idate),
+MONTH(@idate),
+DAY(@idate),
+DATENAME(WEEKDAY,@idate),
+DATENAME(MONTH,@idate)
+);
+SET @idate= DATEADD(DAY, 1, @idate);
+end;
+
