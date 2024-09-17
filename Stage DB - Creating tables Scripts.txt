@@ -1,0 +1,73 @@
+CREATE TABLE [olist_sellers] (
+    [seller_id] varchar(50),
+    [seller_zip_code_prefix] int,
+    [seller_city] varchar(50),
+    [seller_state] varchar(50)
+);
+CREATE TABLE [olist_prod_catalog_name_tr] (
+    [product_category_name] nvarchar(50),
+    [product_category_name_english] nvarchar(50)
+);
+CREATE TABLE [olist_products] (
+    [product_id] varchar(50),
+    [product_category_name] varchar(50),
+    [product_name_lenght] int,
+    [product_description_lenght] int,
+    [product_photos_qty] int,
+    [product_weight_g] int,
+    [product_length_cm]int,
+    [product_height_cm] int,
+    [product_width_cm] int
+);
+CREATE TABLE [olist_geolocation] (
+    [geolocation_zip_code_prefix] int,
+    [geolocation_lat] varchar(50),
+    [geolocation_lng] varchar(50),
+    [geolocation_city] varchar(50),
+    [geolocation_state] varchar(50)
+);
+CREATE TABLE [olist_customers] (
+    [customer_id] varchar(50) ,
+    [customer_unique_id] varchar(50),
+    [customer_zip_code_prefix] int,
+    [customer_city] varchar(50),
+    [customer_state] varchar(50)
+);
+CREATE TABLE [olist_orders] (
+    [order_id] varchar(50),
+    [customer_id] varchar(50),
+    [order_status] varchar(50),
+    [order_purchase_timestamp] varchar(50),
+    [order_approved_at] varchar(50),
+    [order_delivered_carrier_date] varchar(50),
+    [order_delivered_customer_date] varchar(50),
+    [order_estimated_delivery_date] varchar(50),
+);
+
+CREATE TABLE [olist_order_items] (
+    [order_id] varchar(50),
+    [order_item_id] int,
+    [product_id] varchar(50),
+    [seller_id] varchar(50),
+    [shipping_limit_date] varchar(50),
+    [price] float,
+    [freight_value] float
+);
+
+CREATE TABLE [olist_order_payments] (
+    [order_id] varchar(50),
+    [payment_sequential] int,
+    [payment_type] varchar(50),
+    [payment_installments] int,
+    [payment_value] float
+);
+
+CREATE TABLE [olist_reviews] (
+    [review_id] varchar(200),
+    [order_id] varchar(200),
+    [review_score] varchar(200),
+    [review_comment_title] text,
+    [review_comment_message] text,
+    [review_creation_date] text,
+    [review_answer_timestamp] text
+);
