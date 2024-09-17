@@ -31,30 +31,24 @@ and in there you can find detailed description of the data sources and the relat
 them
 
 ## Problem Statement
-There are three main datasets to use for further analysis and processing:
-* portfolio.json — containing offer ids and meta data about each offer (duration, type, etc.)
-* profile.json — demographic data for each customer
-* transcript.json — records for transactions, offers received, offers viewed, and offers completed
+There are three main objectives to complete this task:
+* Build the Source DB
+* Build the DWH
+* Create a stored procedure and schedule it through a job to run automatically at 10:00 am.
 
-Our main objective is to perform exploratory data analysis in these three main datasets and perform different visualizations based on transaction, demographic and offer data. Perform needed data cleaning techniques in order to prepare these datasets for the final process which is building a ML model in order to predict how much the customers will spend when performing a transaction from the offer.
+## Implementation and Solution
+First of all I have created a database which will serve as a stage layer schema where all the data in the csv above will be stored as they are into tables with some minor transformations. After I have created all tables in this stage DB where the scripts for creating this tables can be found above in the files. After I have created another Database which will serve as the Data Warehouse for analytical and querying purposes. Scripts for creating tables in this layer may be found also above. Tables here will be stored in facts and dimensions and of course we have to define constraints like primary keys and foreign keys. As long as this layer of database will be used for analytical purposes we need to ensure its integrity, maintaining uniqueness in tables, automatic indexing and preventing duplicates. I have also created a dimension called calendar. The reason for that is for optimizing queries, by indexing delivery_day_id column (we index columns which we can later join or use in where conditions) we inner join with calendar date and we can play safer in where conditions as the quereies will be executed faster. 
 
-## Metrics
-Selecting appropriate evaluation metrics is crucial when assessing the performance of a machine learning model, especially for regression tasks involving continuous variables. In my case where I am trying to predict how much a customer will spend based on transaction and demographics data, choosing R-squared (R2 score), Mean Absolute Error (MAE), and Mean Squared Error (MSE) demonstrates a comprehensive approach to model evaluation.
+Now in Visual Studio, we create a new SSIS Project where we can build the ETL Pipeline. I have in overall 5 steps in ETL Pipeline, 2 Execute SQL Task and 3 Data Flow task. 
+I start first with Exectuing the first SQL Task, where I truncate all tables in stage layer. The reason why is that whenever I execute the ETL, we do not insert data multiple times and end up in duplicate values.
+So first we connect with stage db and execute truncate table for all stage tables.
+After I have created a data flow task, in which I connect with all csv files. 9 sources assitans used for 9 csv's and 9 destinations for 9 tables that we created in stage layer. During the extraction we do some transformations like replacing quotation marks in columns that might have quotations and blank cells in columns that have int datatype replacing with nulls. After we do some data types conversion so the extracted columns have the same data type as columns in destination. These two steps identify the ETL for loading data into stage layer.
 
-## Implementation
-In this section, I will define X and y variables from the cleaned dataset.As our target is to predict amount spent from customers then the y variable will be ‘amount_spent’ column and all the other columns ‘time’, ’age’, ’income’, ’Year’, ’Month’, ’Day’, ’Transaction_frequency’, ’IncomeAgeRatio’, ’IsSummer’,’ AmountPerTransaction’ will be X variable.Then we split both datasets into train and test. I will be using four types of ML models in order to evaluate them based on metrics I mentioned above: r2_score, mse and mae.
+After this Data Flow task we create another SQL task where we perform a deletion of all rows in Production / Data Warehouse tables. Same reason , we do not want to insert duplicate values each time we exectue the ETL procedure. This time we must be careful, we must delete rows from fact table before dimensions because it may raise an error which comes from foreign key constraints. The reason is that we must not have ids which are foreign keys in fact that do not exists in our dimension tables. 
+After deleting all rows in production layer tables, we insert tables in dimension using as source the stage layer tables that we populated before by running sql scripts commnads. For customers,sellers and products we do it the same. After create another data flow task for loading rows in fact table using the same way, from stage layer tables with sql commands loading data into fact table in production layer.
+The same reason stands for loading dimensions before fact.
 
-## Reflection
-From the given datasets portfolio, profile and transcript, when performing EDA for each of the dataset I can say that portfolio is well organized with no missing data and really clear and concise but it could not be used in my final dataframe because in records of type transaction there are no offer id on which offer the customer has spent.
+After we have all the data set and ready in production we have created the stored procedure with two variables current year and previous year to get a YoY comparison for product revenue,shipping revenue and average review score by customer and sellers state.
 
-While the two other datasets had missing values, we had to impute values for missing data on each profile and transcript datasets. And in the end I had to recreate features for my final dataframe in order to have a better result for my predictions.
+After creating the stored procedure, we create a job which executes the stored procedure by giving variables a value and using EXEC command in sql command seciotn. Scheduled in 10:00 am daily.
 
-## Improvements
-An improvement could be having the offer id on our transcript dataframe for records of type transaction in order to play with the portfolio details also in our ML models.
-Also we can consider adding more features, exploring other models, handle better the categorical features and maybe address missing data in better ways.
-
-## Motivation
-I have completed this project as a part of the Udacity Data Science Nanodegree Program - Starbucks Capstone Challenge.
-
-## Medium Blog
-https://medium.com/@subashiklajbi/starbucks-capstone-challenge-f762f4b8d49b
