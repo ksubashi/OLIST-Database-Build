@@ -4,6 +4,7 @@ For this exercise, you will need to install on your local computer:
 * SQL Server
 * SQL Server Management Studio
 * SQL Server Integration Services
+
 You will also need to download Visual Studio as it will be the software where we are going to build the ETL Pipeline through SSIS.
 
 ## Project Overview
