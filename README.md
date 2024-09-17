@@ -21,7 +21,8 @@ files:
 * olist_products_dataset.csv
 * olist_sellers_dataset.csv
 * product_category_name_translation.csv
-This data set has been retrieved from kaggle.com - https://www.kaggle.com/olistbr/brazilianecommerce?select=olist_orders_dataset.csv (Olist and Sionek 2018) and it is protected by a 
+
+This data set has been retrieved from kaggle.com -https://www.kaggle.com/olistbr/brazilianecommerce?select=olist_orders_dataset.csv (Olist and Sionek 2018) and it is protected by a 
 Creative Commons licence - CC BY-NC-SA 4.0. This means that the data set can only be used for 
 the purpose of this exercise in the context of data analysis and nothing more. Please refer to the 
 license summary - https://creativecommons.org/licenses/by-nc-sa/4.0/.
