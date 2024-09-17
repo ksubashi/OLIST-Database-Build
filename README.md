@@ -1,9 +1,9 @@
 # OLIST-Database-Build
 ## Installation
 For this exercise, you will need to install on your local computer:
-▪ SQL Server
-▪ SQL Server Management Studio
-▪ SQL Server Integration Services
+* SQL Server
+* SQL Server Management Studio
+* SQL Server Integration Services
 You will also need to download Visual Studio as it will be the software where we are going to build the ETL Pipeline through SSIS.
 
 ## Project Overview
@@ -12,15 +12,15 @@ Brazilian marketplaces. Olist connects small businesses from all over Brazil to 
 hassle and with a single contract. Those merchants are able to sell their products through the Olist 
 Store and ship them directly to the customers using Olist logistics partners. There are 9 source csv 
 files:
-▪ olist_customers_dataset.csv
-▪ olist_geolocation_dataset.csv
-▪ olist_orders_dataset.csv
-▪ olist_order_items_dataset.csv
-▪ olist_order_payments_dataset.csv
-▪ olist_order_reviews_dataset.csv
-▪ olist_products_dataset.csv
-▪ olist_sellers_dataset.csv
-▪ product_category_name_translation.csv
+* olist_customers_dataset.csv
+* olist_geolocation_dataset.csv
+* olist_orders_dataset.csv
+* olist_order_items_dataset.csv
+* olist_order_payments_dataset.csv
+* olist_order_reviews_dataset.csv
+* olist_products_dataset.csv
+* olist_sellers_dataset.csv
+* product_category_name_translation.csv
 This data set has been retrieved from kaggle.com - https://www.kaggle.com/olistbr/brazilianecommerce?select=olist_orders_dataset.csv (Olist and Sionek 2018) and it is protected by a 
 Creative Commons licence - CC BY-NC-SA 4.0. This means that the data set can only be used for 
 the purpose of this exercise in the context of data analysis and nothing more. Please refer to the 
