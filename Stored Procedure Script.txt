@@ -1,0 +1,55 @@
+create procedure YoY_orders_details
+@currentYear int,
+@previousyear int
+as
+begin
+select curr.year,
+curr.customer_state,
+curr.seller_state,
+product_sales_revenue,
+shipping_revenue,
+average_review_score,
+prev.prev_year,
+prev.prev_product_sales_revenue,
+prev.prev_shipping_revenue,
+prev.prev_average_review_score,
+isnull(product_sales_revenue,0)-isnull(prev_product_sales_revenue,0) YoY_prod_sales_revenue,
+isnull(shipping_revenue,0)-isnull(prev_shipping_revenue,0) YoY_shipping_revenue,
+isnull(average_review_score,0)-isnull(prev_average_review_score,0) YoY_average_review_score
+from(select c.year,
+cs.customer_state ,
+s.seller_state,
+sum(product_sales_revenue)product_sales_revenue,
+sum(shipping_revenue)shipping_revenue,
+sum(sum_review_score)/sum(nr_of_review_score)average_review_score
+from fact_delivered_orders f
+inner join dim_Calendar c
+on f.delivery_day_id=c.dateID
+left join dim_customers cs
+on f.customer_id=cs.customer_id
+left join dim_sellers s
+on f.seller_id=s.seller_id
+where c.year=@currentYear
+group by c.year,
+cs.customer_state,
+s.seller_state)curr
+left join (select c.year prev_year,
+cs.customer_state ,
+s.seller_state,
+sum(product_sales_revenue)prev_product_sales_revenue,
+sum(shipping_revenue)prev_shipping_revenue,
+sum(sum_review_score)/sum(nr_of_review_score)prev_average_review_score
+from fact_delivered_orders f
+inner join dim_Calendar c
+on f.delivery_day_id=c.dateID
+left join dim_customers cs
+on f.customer_id=cs.customer_id
+left join dim_sellers s
+on f.seller_id=s.seller_id
+where c.year=@previousYear
+group by c.year,
+cs.customer_state,
+s.seller_state)prev
+on curr.customer_state= prev.customer_state
+and curr.seller_state=prev.seller_state
+end;
